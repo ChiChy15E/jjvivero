@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Productos JJ Vivero</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .producto { border: 1px solid #ccc; margin: 10px; padding: 15px; border-radius: 5px; }
+        .categoria { background: #e8f5e8; padding: 5px 10px; border-radius: 15px; display: inline-block; margin: 2px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test de Productos - JJ Vivero</h1>
+    <div id="productos-test"></div>
+    <div id="categorias-test"></div>
+
+    <script src="config/productos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const productos = window.productosDB.obtenerTodos();
+            const categorias = window.productosDB.obtenerCategorias();
+            
+            // Mostrar productos
+            const productosContainer = document.getElementById('productos-test');
+            productosContainer.innerHTML = `
+                <h2>📦 Productos Disponibles (${productos.length})</h2>
+                ${productos.map(p => `
+                    <div class="producto">
+                        <h3>${p.nombre} (${p.nombreCientifico})</h3>
+                        <p><strong>Precio:</strong> ${p.precio}</p>
+                        <p><strong>Categoría:</strong> ${p.categoria}</p>
+                        <p><strong>ImagenKey:</strong> ${p.imagenKey}</p>
+                        <p>${p.descripcion}</p>
+                    </div>
+                `).join('')}
+            `;
+            
+            // Mostrar categorías
+            const categoriasContainer = document.getElementById('categorias-test');
+            categoriasContainer.innerHTML = `
+                <h2>🏷️ Categorías Disponibles (${categorias.length})</h2>
+                ${categorias.map(cat => `<span class="categoria">${cat}</span>`).join('')}
+            `;
+            
+            console.log('✅ Test completado');
+            console.log('Productos:', productos.length);
+            console.log('Categorías:', categorias);
+        });
+    </script>
+</body>
+</html>

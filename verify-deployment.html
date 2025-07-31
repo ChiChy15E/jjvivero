@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación de Despliegue - JJ Vivero</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f7fafc;
+        }
+        .header {
+            background: linear-gradient(135deg, #2f855a 0%, #38a169 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .check-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .check-item.success {
+            border-left-color: #38a169;
+        }
+        .check-item.error {
+            border-left-color: #e53e3e;
+        }
+        .status {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .success { color: #38a169; }
+        .error { color: #e53e3e; }
+        .warning { color: #ed8936; }
+        .summary {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        button {
+            background: #38a169;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2f855a;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔍 Verificación de Despliegue</h1>
+        <p>Comprobando que todos los archivos estén listos para el lanzamiento</p>
+    </div>
+
+    <div id="checks-container">
+        <!-- Los checks se cargarán aquí -->
+    </div>
+
+    <div class="summary" id="summary">
+        <button onclick="runChecks()">🔄 Ejecutar Verificación</button>
+        <button onclick="window.open('index.html', '_blank')">🌐 Ver Sitio</button>
+        <button onclick="window.open('admin.html', '_blank')">🔐 Ver Admin</button>
+    </div>
+
+    <script>
+        const checks = [
+            {
+                name: 'Archivo index.html',
+                test: () => fetch('index.html').then(r => r.ok),
+                description: 'Página principal del sitio'
+            },
+            {
+                name: 'Archivo admin.html',
+                test: () => fetch('admin.html').then(r => r.ok),
+                description: 'Panel de administración'
+            },
+            {
+                name: 'Archivo styles.css',
+                test: () => fetch('styles.css').then(r => r.ok),
+                description: 'Estilos principales'
+            },
+            {
+                name: 'Archivo script.js',
+                test: () => fetch('script.js').then(r => r.ok),
+                description: 'JavaScript principal'
+            },
+            {
+                name: 'Configuración de imágenes',
+                test: () => fetch('config/images.js').then(r => r.ok),
+                description: 'config/images.js'
+            },
+            {
+                name: 'Base de datos de productos',
+                test: () => fetch('config/productos.js').then(r => r.ok),
+                description: 'config/productos.js'
+            },
+            {
+                name: 'Configuración de autenticación',
+                test: () => fetch('config/auth.js').then(r => r.ok),
+                description: 'config/auth.js'
+            },
+            {
+                name: 'Logo del vivero',
+                test: () => fetch('images/LOGO.png').then(r => r.ok),
+                description: 'images/LOGO.png'
+            },
+            {
+                name: 'Imagen placeholder',
+                test: () => fetch('images/placeholder.svg').then(r => r.ok),
+                description: 'images/placeholder.svg'
+            },
+            {
+                name: 'README principal',
+                test: () => fetch('README.md').then(r => r.ok),
+                description: 'Documentación del proyecto'
+            },
+            {
+                name: 'Configuración Netlify',
+                test: () => fetch('netlify.toml').then(r => r.ok),
+                description: 'netlify.toml para despliegue'
+            },
+            {
+                name: 'Licencia MIT',
+                test: () => fetch('LICENSE').then(r => r.ok),
+                description: 'Archivo de licencia'
+            }
+        ];
+
+        async function runChecks() {
+            const container = document.getElementById('checks-container');
+            container.innerHTML = '<p>🔄 Ejecutando verificaciones...</p>';
+            
+            let passed = 0;
+            let failed = 0;
+            let results = [];
+
+            for (const check of checks) {
+                try {
+                    const result = await check.test();
+                    if (result) {
+                        passed++;
+                        results.push({
+                            ...check,
+                            status: 'success',
+                            message: '✅ OK'
+                        });
+                    } else {
+                        failed++;
+                        results.push({
+                            ...check,
+                            status: 'error',
+                            message: '❌ Error'
+                        });
+                    }
+                } catch (error) {
+                    failed++;
+                    results.push({
+                        ...check,
+                        status: 'error',
+                        message: '❌ No encontrado'
+                    });
+                }
+            }
+
+            // Mostrar resultados
+            container.innerHTML = results.map(result => `
+                <div class="check-item ${result.status}">
+                    <div class="status ${result.status}">${result.message}</div>
+                    <div>
+                        <strong>${result.name}</strong><br>
+                        <small>${result.description}</small>
+                    </div>
+                </div>
+            `).join('');
+
+            // Mostrar resumen
+            const summary = document.getElementById('summary');
+            const totalChecks = checks.length;
+            const percentage = Math.round((passed / totalChecks) * 100);
+            
+            let summaryClass = 'success';
+            let summaryMessage = '';
+            
+            if (percentage === 100) {
+                summaryClass = 'success';
+                summaryMessage = `🎉 ¡Perfecto! Todos los archivos están listos (${passed}/${totalChecks})`;
+            } else if (percentage >= 80) {
+                summaryClass = 'warning';
+                summaryMessage = `⚠️ Casi listo: ${passed}/${totalChecks} archivos OK (${percentage}%)`;
+            } else {
+                summaryClass = 'error';
+                summaryMessage = `❌ Faltan archivos: ${passed}/${totalChecks} OK (${percentage}%)`;
+            }
+
+            summary.innerHTML = `
+                <div class="${summaryClass}" style="margin-bottom: 20px;">
+                    <h3>${summaryMessage}</h3>
+                    ${percentage < 100 ? '<p>Revisa los archivos marcados con ❌ antes del despliegue</p>' : '<p>¡Tu sitio está listo para ser desplegado!</p>'}
+                </div>
+                <button onclick="runChecks()">🔄 Verificar Nuevamente</button>
+                <button onclick="window.open('index.html', '_blank')">🌐 Ver Sitio</button>
+                <button onclick="window.open('admin.html', '_blank')">🔐 Ver Admin</button>
+                ${percentage === 100 ? '<button onclick="window.open(\'DEPLOYMENT_GUIDE.md\', \'_blank\')" style="background: #ed8936;">🚀 Guía de Despliegue</button>' : ''}
+            `;
+        }
+
+        // Ejecutar verificación al cargar
+        document.addEventListener('DOMContentLoaded', runChecks);
+    </script>
+</body>
+</html>
