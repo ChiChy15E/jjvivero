@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JJ Vivero - Plantas y Jardines</title>
+    <link rel="icon" type="image/png" href="images/LOGO.png">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <div class="logo">
+                    <img src="images/LOGO.png" alt="JJ Vivero Logo" class="logo-img">
+                </div>
+                <h1 class="brand-name">JJ Vivero</h1>
+            </div>
+            <nav class="nav-menu">
+                <a href="#inicio" class="nav-link">Inicio</a>
+                <a href="#catalogo" class="nav-link">Catálogo</a>
+                <a href="#contacto" class="nav-link">Contacto</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero">
+        <!-- Carrusel de imágenes de fondo -->
+        <div class="hero-carousel">
+            <div class="hero-slides" id="hero-slides">
+                <!-- Las imágenes se cargarán dinámicamente -->
+            </div>
+            <div class="hero-overlay"></div>
+        </div>
+
+        <!-- Contenido del hero -->
+        <div class="hero-content">
+            <h2 class="hero-title">Bienvenido a JJ Vivero</h2>
+            <p class="hero-subtitle">Tu jardín perfecto comienza aquí. Descubre nuestra amplia selección de plantas y
+                encuentra la compañera verde ideal para tu hogar.</p>
+            <a href="#catalogo" class="cta-button">Ver Catálogo</a>
+        </div>
+
+        <!-- Controles del carrusel -->
+        <div class="hero-controls">
+            <button class="hero-nav prev" onclick="cambiarSlide(-1)">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="hero-nav next" onclick="cambiarSlide(1)">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Indicadores -->
+        <div class="hero-indicators" id="hero-indicators">
+            <!-- Se generarán dinámicamente -->
+        </div>
+    </section>
+
+    <!-- Catálogo de Productos -->
+    <section id="catalogo" class="catalog">
+        <div class="container">
+            <h2 class="section-title">Nuestro Catálogo</h2>
+            <div class="products-grid" id="products-container">
+                <!-- Los productos se cargarán dinámicamente con JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="images/LOGO.png" alt="JJ Vivero Logo" class="footer-logo-img">
+                    </div>
+                    <h3>JJ Vivero</h3>
+                    <p>Cultivando vida, creando hogares verdes</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-phone"></i> Cel.: 809-881-4389 - 809-935-4414 </p>
+                    <p><i class="fas fa-envelope"></i> yomy05@hotmail.es </p>
+                </div>
+                <div class="footer-section">
+                    <h4>Síguenos</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 JJ Vivero. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="config/database.js"></script>
+    <script src="config/images.js"></script>
+    <script src="config/productos.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect fill="#c6f6d5" width="400" height="300"/>
+  <rect fill="#9ae6b4" x="50" y="50" width="300" height="200" rx="10"/>
+  <circle fill="#2f855a" cx="200" cy="150" r="40"/>
+  <path fill="#38a169" d="M200,110 L180,130 L220,130 Z"/>
+  <path fill="#38a169" d="M200,190 L180,170 L220,170 Z"/>
+  <text x="200" y="250" text-anchor="middle" fill="#2f855a" font-family="Arial" font-size="16" font-weight="bold">JJ Vivero</text>
+  <text x="200" y="270" text-anchor="middle" fill="#4a5568" font-family="Arial" font-size="12">Imagen de ejemplo</text>
+</svg>

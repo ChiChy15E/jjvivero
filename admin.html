@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - JJ Vivero</title>
+    <link rel="icon" type="image/png" href="images/LOGO.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f7fafc;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2f855a 0%, #38a169 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .admin-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #2f855a;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #c6f6d5;
+            padding-bottom: 10px;
+        }
+
+        .btn {
+            background: #38a169;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #2f855a;
+        }
+
+        .btn-add {
+            background: #48bb78;
+        }
+
+        .btn-edit {
+            background: #4299e1;
+        }
+
+        .btn-delete {
+            background: #e53e3e;
+        }
+
+        .btn-primary {
+            background: #38a169;
+        }
+
+        .btn-cancel {
+            background: #e53e3e;
+        }
+
+        .producto-form {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .productos-lista {
+            display: grid;
+            gap: 15px;
+        }
+
+        .producto-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 100px 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .producto-imagen {
+            width: 100px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .producto-info h4 {
+            color: #2f855a;
+            margin-bottom: 5px;
+        }
+
+        .producto-info p {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+
+        .producto-actions {
+            display: flex;
+            gap: 5px;
+            flex-direction: column;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #38a169;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            color: #2f855a;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #e53e3e;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        /* Estilos específicos para imágenes hero */
+        .hero-preview {
+            width: 100px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .hero-info {
+            position: relative;
+        }
+
+        .hero-info::before {
+            content: '🖼️';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #38a169;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        /* Estilos para la configuración de imágenes */
+        .toggle-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .toggle-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+        }
+
+        .toggle-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+        }
+
+        .toggle-btn.active {
+            background: #ed8936;
+            box-shadow: 0 4px 15px rgba(237, 137, 54, 0.3);
+        }
+
+        .toggle-btn.active:hover {
+            background: #dd6b20;
+            box-shadow: 0 6px 20px rgba(237, 137, 54, 0.4);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-online {
+            background: #38a169;
+        }
+
+        .status-local {
+            background: #ed8936;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .instructions {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .instructions h4 {
+            color: #2f855a;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .instructions h5 {
+            font-weight: 600;
+        }
+
+        .instructions ul {
+            color: #4a5568;
+        }
+
+        .instructions li {
+            margin-bottom: 5px;
+        }
+
+        /* Indicadores de modo en formularios */
+        .mode-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .mode-external {
+            background: #bee3f8;
+            color: #2b6cb0;
+        }
+
+        .mode-local {
+            background: #fed7aa;
+            color: #c05621;
+        }
+
+        /* ========== ESTILOS PARA LOGIN ========== */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a4d3a 0%, #2f855a 50%, #38a169 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            animation: loginSlideIn 0.6s ease-out;
+        }
+
+        @keyframes loginSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-header {
+            margin-bottom: 30px;
+        }
+
+        .login-logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-header h1 {
+            color: #2f855a;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .login-header p {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        .login-form {
+            margin-bottom: 25px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .login-form label i {
+            margin-right: 8px;
+            color: #38a169;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: #38a169;
+            box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.1);
+        }
+
+        .password-input {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #718096;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: #38a169;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(135deg, #2f855a 0%, #1a4d3a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(56, 161, 105, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-error {
+            background: #fed7d7;
+            color: #e53e3e;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .login-footer {
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+
+
+        .back-to-site {
+            display: inline-block;
+            color: #38a169;
+            text-decoration: none;
+            margin-top: 15px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-to-site:hover {
+            color: #2f855a;
+            text-decoration: underline;
+        }
+
+        /* Estilos para el header con logout */
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info h1 {
+            margin-bottom: 5px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* Responsive para login */
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 20px;
+                padding: 30px 25px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .producto-item {
+                grid-template-columns: 80px 1fr;
+                gap: 10px;
+            }
+
+            .producto-actions {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: center;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Pantalla de Login -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <img src="images/LOGO.png" alt="JJ Vivero Logo" class="login-logo">
+                <h1>🌱 JJ Vivero</h1>
+                <p>Panel de Administración</p>
+            </div>
+
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="username">
+                        <i class="fas fa-user"></i> Usuario
+                    </label>
+                    <input type="text" id="username" placeholder="Ingresa tu usuario" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i> Contraseña
+                    </label>
+                    <div class="password-input">
+                        <input type="password" id="password" placeholder="Ingresa tu contraseña" required
+                            autocomplete="current-password">
+                        <button type="button" class="toggle-password" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="password-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                </button>
+
+                <div id="login-error" class="login-error" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span id="login-error-text">Usuario o contraseña incorrectos</span>
+                </div>
+            </form>
+
+            <div class="login-footer">
+                <a href="index.html" class="back-to-site">
+                    <i class="fas fa-arrow-left"></i> Volver al sitio web
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido Principal del Admin (oculto inicialmente) -->
+    <div id="admin-content" class="admin-content" style="display: none;">
+        <div class="container">
+            <a href="index.html" class="back-link">← Volver al sitio web</a>
+
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-info">
+                        <h1>🌱 Panel de Administración - JJ Vivero</h1>
+                        <p>Gestiona tu catálogo de plantas fácilmente</p>
+                    </div>
+                    <div class="header-actions">
+                        <span class="user-info">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="logged-user">admin</span>
+                        </span>
+                        <button class="logout-btn" onclick="cerrarSesion()">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="success-message" class="success-message"></div>
+            <div id="error-message" class="error-message"></div>
+
+            <div class="admin-section">
+                <h2 class="section-title">⚙️ Configuración de Imágenes</h2>
+
+                <div class="toggle-section">
+                    <button id="toggleMode" class="toggle-btn">
+                        <span class="status-indicator status-online"></span>
+                        Usando imágenes externas
+                    </button>
+                    <p style="margin-top: 10px; color: #718096; text-align: center;">
+                        Haz clic para alternar entre imágenes externas (URLs) y locales (archivos)
+                    </p>
+                </div>
+
+                <div class="instructions">
+                    <h4>📋 Instrucciones:</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+                        <div>
+                            <h5 style="color: #38a169; margin-bottom: 10px;">🌐 Imágenes Externas (URLs)</h5>
+                            <ul style="margin-left: 20px; font-size: 0.9rem;">
+                                <li>Usa URLs de Unsplash, tu servidor, etc.</li>
+                                <li>Cambios inmediatos sin subir archivos</li>
+                                <li>Ideal para pruebas rápidas</li>
+                                <li>Requiere conexión a internet</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5 style="color: #ed8936; margin-bottom: 10px;">📁 Imágenes Locales (Archivos)</h5>
+                            <ul style="margin-left: 20px; font-size: 0.9rem;">
+                                <li>Sube archivos a la carpeta 'images/'</li>
+                                <li>Mayor control y velocidad</li>
+                                <li>Funciona sin internet</li>
+                                <li>Nombres automáticos generados</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div
+                        style="background: #e6fffa; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #38a169;">
+                        <h5 style="color: #2f855a; margin-bottom: 8px;">💡 Recomendaciones de Tamaño:</h5>
+                        <div style="font-size: 0.9rem; color: #2d3748;">
+                            <strong>Hero/Carrusel:</strong> 1200x800 píxeles (3:2) |
+                            <strong>Productos:</strong> 400x300 píxeles (4:3) |
+                            <strong>Formatos:</strong> JPG, PNG, WebP
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h2 class="section-title">🖼️ Gestión de Imágenes Hero (Carrusel)</h2>
+
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <button class="btn btn-add" onclick="mostrarFormularioHero()">
+                        <i class="fas fa-plus"></i> Agregar Imagen Hero
+                    </button>
+                    <button class="btn" onclick="recargarListaHero()">
+                        <i class="fas fa-sync"></i> Recargar Hero
+                    </button>
+                    <button class="btn" onclick="previsualizarCarrusel()">
+                        <i class="fas fa-images"></i> Ver Carrusel
+                    </button>
+                </div>
+
+                <!-- Formulario para agregar/editar imágenes hero -->
+                <div id="hero-form" class="producto-form">
+                    <h3 id="hero-form-title">Agregar Imagen Hero</h3>
+                    <form id="form-hero" onsubmit="manejarFormularioHero(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nombre de la Imagen *</label>
+                                <input type="text" id="hero-nombre" placeholder="Ej: Jardín Principal" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Posición en Carrusel *</label>
+                                <select id="hero-posicion" required>
+                                    <option value="">Seleccionar posición</option>
+                                    <option value="slide1">Slide 1 (Primera imagen)</option>
+                                    <option value="slide2">Slide 2</option>
+                                    <option value="slide3">Slide 3</option>
+                                    <option value="slide4">Slide 4</option>
+                                    <option value="slide5">Slide 5 (Nueva)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                URL de Imagen *
+                                <span id="hero-mode-indicator" class="mode-indicator mode-external">EXTERNO</span>
+                            </label>
+                            <input type="url" id="hero-imagenUrl" placeholder="https://ejemplo.com/imagen-hero.jpg"
+                                required>
+                            <small id="hero-help-text" style="color: #718096;">Recomendado: 1200x800 píxeles para mejor
+                                calidad</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Descripción (Opcional)</label>
+                            <textarea id="hero-descripcion" rows="2"
+                                placeholder="Descripción de la imagen para SEO"></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar Imagen Hero
+                            </button>
+                            <button type="button" class="btn btn-cancel" onclick="cancelarFormularioHero()">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Lista de imágenes hero existentes -->
+                <div class="productos-lista" id="hero-lista">
+                    <!-- Se cargará dinámicamente -->
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h2 class="section-title">🌱 Gestión de Productos (Catálogo Infinito)</h2>
+
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <button class="btn btn-add" onclick="mostrarFormularioAgregar()">
+                        <i class="fas fa-plus"></i> Agregar Nueva Planta
+                    </button>
+                    <button class="btn" onclick="recargarListaProductos()">
+                        <i class="fas fa-sync"></i> Recargar Lista
+                    </button>
+                    <button class="btn" onclick="previsualizarSitio()">
+                        <i class="fas fa-eye"></i> Ver Sitio
+                    </button>
+                </div>
+
+                <!-- Formulario para agregar/editar productos -->
+                <div id="producto-form" class="producto-form">
+                    <h3 id="form-title">Agregar Nueva Planta</h3>
+                    <form id="form-producto" onsubmit="manejarFormulario(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nombre de la Planta *</label>
+                                <input type="text" id="nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Nombre Científico *</label>
+                                <input type="text" id="nombreCientifico" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Precio *</label>
+                                <input type="text" id="precio" placeholder="$25.000" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Categoría *</label>
+                                <select id="categoria" required>
+                                    <option value="">Seleccionar categoría</option>
+                                    <option value="Interior">Interior</option>
+                                    <option value="Exterior">Exterior</option>
+                                    <option value="Suculentas">Suculentas</option>
+                                    <option value="Aromáticas">Aromáticas</option>
+                                    <option value="Frutales">Frutales</option>
+                                    <option value="Ornamentales">Ornamentales</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Descripción *</label>
+                            <textarea id="descripcion" rows="3" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                URL de Imagen *
+                                <span id="producto-mode-indicator" class="mode-indicator mode-external">EXTERNO</span>
+                            </label>
+                            <input type="url" id="imagenUrl" placeholder="https://ejemplo.com/imagen.jpg" required>
+                            <small id="producto-help-text" style="color: #718096;">Puedes usar URLs de Unsplash, tu
+                                servidor, etc.</small>
+                        </div>
+
+                        <h4 style="color: #2f855a; margin: 20px 0 10px 0;">Cuidados de la Planta</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Riego *</label>
+                                <input type="text" id="riego" placeholder="2-3 veces por semana" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Luz *</label>
+                                <input type="text" id="luz" placeholder="Luz indirecta brillante" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tipo de Suelo *</label>
+                            <input type="text" id="suelo" placeholder="Suelo bien drenado y húmedo" required>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar Planta
+                            </button>
+                            <button type="button" class="btn btn-cancel" onclick="cancelarFormulario()">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Lista de productos existentes -->
+                <div class="productos-lista" id="productos-lista">
+                    <!-- Se cargará dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="config/database.js"></script>
+    <script src="config/images.js"></script>
+    <script src="config/productos.js"></script>
+    <script>
+        // ========== SISTEMA DE LOGIN ==========
+
+        // Configuración de usuarios (en un entorno real, esto estaría en el servidor)
+        const usuarios = {
+            'admin': 'jjvivero2024',
+            'vivero': 'plantas123',
+            'jjadmin': 'admin2024'
+        };
+
+        // Variables de sesión
+        let usuarioLogueado = null;
+        let sesionActiva = false;
+
+        // Función para verificar si hay una sesión activa
+        function verificarSesion() {
+            const sesion = localStorage.getItem('jjvivero_session');
+            const tiempoSesion = localStorage.getItem('jjvivero_session_time');
+
+            if (sesion && tiempoSesion) {
+                const tiempoActual = new Date().getTime();
+                const tiempoGuardado = parseInt(tiempoSesion);
+                const tiempoExpiracion = 4 * 60 * 60 * 1000; // 4 horas
+
+                if (tiempoActual - tiempoGuardado < tiempoExpiracion) {
+                    usuarioLogueado = sesion;
+                    sesionActiva = true;
+                    mostrarAdmin();
+                    return true;
+                }
+            }
+
+            mostrarLogin();
+            return false;
+        }
+
+        // Función para mostrar la pantalla de login
+        function mostrarLogin() {
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('admin-content').style.display = 'none';
+            document.getElementById('username').focus();
+        }
+
+        // Función para mostrar el admin
+        function mostrarAdmin() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('admin-content').style.display = 'block';
+            document.getElementById('logged-user').textContent = usuarioLogueado || 'admin';
+        }
+
+        // Función para manejar el login
+        function manejarLogin(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('login-error');
+            const errorText = document.getElementById('login-error-text');
+
+            // Validar credenciales
+            if (usuarios[username] && usuarios[username] === password) {
+                // Login exitoso
+                usuarioLogueado = username;
+                sesionActiva = true;
+
+                // Guardar sesión
+                localStorage.setItem('jjvivero_session', username);
+                localStorage.setItem('jjvivero_session_time', new Date().getTime().toString());
+
+                // Ocultar error si estaba visible
+                errorDiv.style.display = 'none';
+
+                // Mostrar admin con animación
+                setTimeout(() => {
+                    mostrarAdmin();
+                    inicializarAdmin();
+                    mostrarMensaje(`✅ Bienvenido ${username}! Sesión iniciada correctamente`);
+                }, 300);
+
+            } else {
+                // Login fallido
+                errorText.textContent = 'Credenciales incorrectas. Contacta al administrador si necesitas acceso.';
+                errorDiv.style.display = 'block';
+
+                // Limpiar campos
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+
+                // Ocultar error después de 3 segundos
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Función para cerrar sesión
+        function cerrarSesion() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                // Limpiar sesión
+                localStorage.removeItem('jjvivero_session');
+                localStorage.removeItem('jjvivero_session_time');
+
+                usuarioLogueado = null;
+                sesionActiva = false;
+
+                // Limpiar formularios
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+
+                // Mostrar login
+                mostrarLogin();
+
+                // Mensaje de despedida
+                setTimeout(() => {
+                    const errorDiv = document.getElementById('login-error');
+                    const errorText = document.getElementById('login-error-text');
+                    errorText.textContent = '👋 Sesión cerrada correctamente';
+                    errorDiv.style.background = '#c6f6d5';
+                    errorDiv.style.color = '#2f855a';
+                    errorDiv.style.display = 'block';
+
+                    setTimeout(() => {
+                        errorDiv.style.display = 'none';
+                        errorDiv.style.background = '#fed7d7';
+                        errorDiv.style.color = '#e53e3e';
+                    }, 2000);
+                }, 100);
+            }
+        }
+
+        // Función para mostrar/ocultar contraseña
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordIcon = document.getElementById('password-icon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.className = 'fas fa-eye';
+            }
+        }
+
+        // Función para manejar Enter en los campos
+        function manejarTeclaLogin(e) {
+            if (e.key === 'Enter') {
+                if (e.target.id === 'username') {
+                    document.getElementById('password').focus();
+                } else if (e.target.id === 'password') {
+                    document.getElementById('login-form').dispatchEvent(new Event('submit'));
+                }
+            }
+        }
+
+        // Variables globales del admin
+        let editandoProducto = null;
+        let editandoHero = null;
+        let modoLocal = false;
+
+        // Función para notificar al sitio principal
+        function notificarSitioPrincipal(accion = 'actualizar') {
+            console.log(`🔄 Notificando al sitio principal: ${accion}`);
+
+            // Método 1: Usar localStorage con timestamp único
+            const timestamp = Date.now();
+            const evento = {
+                accion: accion,
+                timestamp: timestamp,
+                datos: {
+                    modoLocal: modoLocal,
+                    totalProductos: window.productosDB ? window.productosDB.obtenerTodos().length : 0
+                }
+            };
+
+            // Guardar en localStorage con clave única
+            localStorage.setItem('jj_vivero_admin_update', JSON.stringify(evento));
+            console.log('✅ Evento guardado en localStorage:', evento);
+
+            // Método 2: Forzar recarga de la página principal después de un delay
+            setTimeout(() => {
+                try {
+                    if (window.opener && !window.opener.closed) {
+                        console.log('🔄 Forzando recarga de la página principal...');
+                        window.opener.location.reload();
+                        return true;
+                    }
+                } catch (e) {
+                    console.log('❌ No se pudo recargar la página principal:', e);
+                }
+            }, 1000);
+
+            return true;
+        }
+
+        // Función para mostrar mensajes
+        function mostrarMensaje(mensaje, tipo = 'success') {
+            const elemento = document.getElementById(tipo === 'success' ? 'success-message' : 'error-message');
+            elemento.textContent = mensaje;
+            elemento.style.display = 'block';
+            setTimeout(() => {
+                elemento.style.display = 'none';
+            }, 3000);
+        }
+
+        // ========== FUNCIONES PARA CONFIGURACIÓN DE IMÁGENES ==========
+
+        // Función para actualizar el estado del botón toggle
+        function actualizarEstadoToggle() {
+            const toggleBtn = document.getElementById('toggleMode');
+
+            if (modoLocal) {
+                toggleBtn.innerHTML = '<span class="status-indicator status-local"></span>Usando imágenes locales';
+                toggleBtn.classList.add('active');
+            } else {
+                toggleBtn.innerHTML = '<span class="status-indicator status-online"></span>Usando imágenes externas';
+                toggleBtn.classList.remove('active');
+            }
+
+            // Actualizar indicadores en formularios
+            actualizarIndicadoresFormulario();
+        }
+
+        // Función para alternar modo de imágenes
+        function alternarModo() {
+            modoLocal = !modoLocal;
+
+            // Actualizar configuración global
+            if (window.imageConfig) {
+                window.imageConfig.useLocalImages = modoLocal;
+                // Guardar configuración de imágenes
+                window.imageConfig.guardarEnLocalStorage();
+            }
+
+            // Guardar en localStorage para persistencia
+            localStorage.setItem('imageMode', modoLocal ? 'local' : 'external');
+
+            actualizarEstadoToggle();
+
+            // Mostrar mensaje informativo
+            if (modoLocal) {
+                mostrarMensaje('🔄 Cambiado a modo LOCAL - Las imágenes se buscarán en la carpeta "images/"');
+            } else {
+                mostrarMensaje('🔄 Cambiado a modo EXTERNO - Usa URLs completas para las imágenes');
+            }
+
+            // Recargar listas para mostrar cambios
+            recargarListaProductos();
+            recargarListaHero();
+
+            // Notificar al sitio principal
+            const notificado = notificarSitioPrincipal('cambio_modo');
+            if (notificado) {
+                mostrarMensaje(`📡 Modo de imágenes actualizado en el sitio web`, 'success');
+            } else {
+                mostrarMensaje(`⚠️ Recarga manualmente el sitio web para ver el cambio de modo`, 'error');
+            }
+        }
+
+        // Función para actualizar indicadores en formularios
+        function actualizarIndicadoresFormulario() {
+            // Elementos de productos
+            const imagenUrlInput = document.getElementById('imagenUrl');
+            const productoIndicator = document.getElementById('producto-mode-indicator');
+            const productoHelpText = document.getElementById('producto-help-text');
+
+            // Elementos de hero
+            const heroImagenUrlInput = document.getElementById('hero-imagenUrl');
+            const heroIndicator = document.getElementById('hero-mode-indicator');
+            const heroHelpText = document.getElementById('hero-help-text');
+
+            if (modoLocal) {
+                // Modo local
+                if (imagenUrlInput) {
+                    imagenUrlInput.placeholder = 'nombre-archivo.jpg (se guardará en images/)';
+                    imagenUrlInput.type = 'text';
+                }
+                if (heroImagenUrlInput) {
+                    heroImagenUrlInput.placeholder = 'hero-imagen.jpg (se guardará en images/)';
+                    heroImagenUrlInput.type = 'text';
+                }
+
+                // Actualizar indicadores
+                if (productoIndicator) {
+                    productoIndicator.textContent = 'LOCAL';
+                    productoIndicator.className = 'mode-indicator mode-local';
+                }
+                if (heroIndicator) {
+                    heroIndicator.textContent = 'LOCAL';
+                    heroIndicator.className = 'mode-indicator mode-local';
+                }
+
+                // Actualizar textos de ayuda
+                if (productoHelpText) {
+                    productoHelpText.textContent = 'Nombre del archivo que subirás a la carpeta images/';
+                }
+                if (heroHelpText) {
+                    heroHelpText.textContent = 'Archivo hero (1200x800px) que subirás a images/';
+                }
+
+            } else {
+                // Modo externo
+                if (imagenUrlInput) {
+                    imagenUrlInput.placeholder = 'https://ejemplo.com/imagen.jpg';
+                    imagenUrlInput.type = 'url';
+                }
+                if (heroImagenUrlInput) {
+                    heroImagenUrlInput.placeholder = 'https://ejemplo.com/imagen-hero.jpg';
+                    heroImagenUrlInput.type = 'url';
+                }
+
+                // Actualizar indicadores
+                if (productoIndicator) {
+                    productoIndicator.textContent = 'EXTERNO';
+                    productoIndicator.className = 'mode-indicator mode-external';
+                }
+                if (heroIndicator) {
+                    heroIndicator.textContent = 'EXTERNO';
+                    heroIndicator.className = 'mode-indicator mode-external';
+                }
+
+                // Actualizar textos de ayuda
+                if (productoHelpText) {
+                    productoHelpText.textContent = 'Puedes usar URLs de Unsplash, tu servidor, etc.';
+                }
+                if (heroHelpText) {
+                    heroHelpText.textContent = 'Recomendado: 1200x800 píxeles para mejor calidad';
+                }
+            }
+        }
+
+        // Función para obtener la URL correcta según el modo
+        function obtenerUrlImagen(imagenKey, esHero = false) {
+            if (!window.imageConfig) return '';
+
+            if (modoLocal) {
+                return esHero ?
+                    window.imageConfig.heroLocales[imagenKey] || `images/${imagenKey}.jpg` :
+                    window.imageConfig.productosLocales[imagenKey] || `images/${imagenKey}.jpg`;
+            } else {
+                return esHero ?
+                    window.imageConfig.hero[imagenKey] :
+                    window.imageConfig.productos[imagenKey];
+            }
+        }
+
+        // Función para generar nombre de archivo local
+        function generarNombreArchivoLocal(nombre, esHero = false) {
+            const nombreLimpio = nombre.toLowerCase()
+                .replace(/\s+/g, '_')
+                .replace(/[^a-z0-9_]/g, '')
+                .substring(0, 20);
+
+            return esHero ? `hero_${nombreLimpio}.jpg` : `${nombreLimpio}.jpg`;
+        }
+
+        // Función para mostrar el formulario de agregar
+        function mostrarFormularioAgregar() {
+            editandoProducto = null;
+            document.getElementById('form-title').textContent = 'Agregar Nueva Planta';
+            document.getElementById('form-producto').reset();
+            document.getElementById('producto-form').style.display = 'block';
+            document.getElementById('producto-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Función para cancelar el formulario
+        function cancelarFormulario() {
+            document.getElementById('producto-form').style.display = 'none';
+            document.getElementById('form-producto').reset();
+            editandoProducto = null;
+        }
+
+        // Función para manejar el envío del formulario
+        async function manejarFormulario(e) {
+            e.preventDefault();
+
+            try {
+                const formData = {
+                    nombre: document.getElementById('nombre').value.trim(),
+                    nombreCientifico: document.getElementById('nombreCientifico').value.trim(),
+                    precio: document.getElementById('precio').value.trim(),
+                    categoria: document.getElementById('categoria').value,
+                    descripcion: document.getElementById('descripcion').value.trim(),
+                    imagenUrl: document.getElementById('imagenUrl').value.trim(),
+                    cuidados: {
+                        riego: document.getElementById('riego').value.trim(),
+                        luz: document.getElementById('luz').value.trim(),
+                        suelo: document.getElementById('suelo').value.trim()
+                    }
+                };
+
+                // Validar que todos los campos estén llenos
+                if (!formData.nombre || !formData.nombreCientifico || !formData.precio ||
+                    !formData.categoria || !formData.descripcion || !formData.imagenUrl ||
+                    !formData.cuidados.riego || !formData.cuidados.luz || !formData.cuidados.suelo) {
+                    mostrarMensaje('Por favor, completa todos los campos obligatorios', 'error');
+                    return;
+                }
+
+                // Generar imagenKey automáticamente
+                const imagenKey = window.productosDB.generarImagenKey(formData.nombre);
+                formData.imagenKey = imagenKey;
+
+                // Procesar imagen según el modo
+                if (window.imageConfig) {
+                    if (modoLocal) {
+                        // Modo local: usar el nombre del archivo que el usuario ingresó
+                        let nombreArchivo = formData.imagenUrl;
+
+                        // Si no tiene extensión, agregar .jpg
+                        if (!nombreArchivo.includes('.')) {
+                            nombreArchivo += '.jpg';
+                        }
+
+                        window.imageConfig.productosLocales[imagenKey] = `images/${nombreArchivo}`;
+                        window.imageConfig.productos[imagenKey] = formData.imagenUrl; // Mantener como respaldo
+
+                        mostrarMensaje(`📁 Imagen configurada como local: ${nombreArchivo}`, 'success');
+                    } else {
+                        // Modo externo: usar URL directamente
+                        window.imageConfig.productos[imagenKey] = formData.imagenUrl;
+                        window.imageConfig.productosLocales[imagenKey] = `images/${imagenKey}.jpg`;
+                    }
+
+                    // Guardar configuración de imágenes
+                    window.imageConfig.guardarEnLocalStorage();
+                }
+
+                // Mostrar mensaje de guardando
+                mostrarMensaje('💾 Guardando en la nube...', 'success');
+                
+                if (editandoProducto) {
+                    // Actualizar producto existente
+                    const resultado = await window.productosDB.actualizar(editandoProducto.id, formData);
+                    if (resultado) {
+                        mostrarMensaje('✅ Producto actualizado y guardado en la nube');
+                    } else {
+                        mostrarMensaje('❌ Error al actualizar el producto', 'error');
+                        return;
+                    }
+                } else {
+                    // Agregar nuevo producto
+                    const nuevoProducto = await window.productosDB.agregar(formData);
+                    if (nuevoProducto) {
+                        mostrarMensaje('✅ Nueva planta agregada y guardada en la nube');
+                    } else {
+                        mostrarMensaje('❌ Error al agregar la planta', 'error');
+                        return;
+                    }
+                }
+
+                cancelarFormulario();
+                recargarListaProductos();
+
+                // Notificar al sitio principal
+                const notificado = notificarSitioPrincipal(editandoProducto ? 'editar' : 'crear');
+                if (notificado) {
+                    mostrarMensaje(`📡 Sitio web actualizado automáticamente`, 'success');
+                } else {
+                    mostrarMensaje(`⚠️ Recarga manualmente el sitio web para ver los cambios`, 'error');
+                }
+
+            } catch (error) {
+                console.error('Error en manejarFormulario:', error);
+                mostrarMensaje('❌ Error inesperado al procesar el formulario', 'error');
+            }
+        }
+
+        // Función para recargar la lista de productos
+        function recargarListaProductos() {
+            try {
+                const lista = document.getElementById('productos-lista');
+
+                if (!window.productosDB) {
+                    lista.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #e53e3e;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+                            <p>Error: No se pudo cargar la base de datos de productos</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const productos = window.productosDB.obtenerTodos();
+
+                if (productos.length === 0) {
+                    lista.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #718096;">
+                            <i class="fas fa-seedling" style="font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+                            <p>No hay productos en el catálogo. ¡Agrega tu primera planta!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                lista.innerHTML = productos.map(producto => {
+                    const imagenUrl = window.imageConfig ?
+                        window.imageConfig.getImageUrl(producto.imagenKey) :
+                        'images/placeholder.svg';
+
+                    return `
+                        <div class="producto-item">
+                            <img src="${imagenUrl}" alt="${producto.nombre}" class="producto-imagen" 
+                                 onerror="this.src='images/placeholder.svg'">
+                            <div class="producto-info">
+                                <h4>${producto.nombre}</h4>
+                                <p><em>${producto.nombreCientifico}</em></p>
+                                <p><strong>${producto.precio}</strong> - ${producto.categoria}</p>
+                                <p>${producto.descripcion.substring(0, 80)}${producto.descripcion.length > 80 ? '...' : ''}</p>
+                            </div>
+                            <div class="producto-actions">
+                                <button class="btn btn-edit" onclick="editarProducto(${producto.id})">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn btn-delete" onclick="eliminarProducto(${producto.id})">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error en recargarListaProductos:', error);
+                mostrarMensaje('❌ Error al cargar la lista de productos', 'error');
+            }
+        }
+
+        // Función para editar producto
+        function editarProducto(id) {
+            try {
+                const producto = window.productosDB.obtenerPorId(id);
+                if (!producto) {
+                    mostrarMensaje('❌ Producto no encontrado', 'error');
+                    return;
+                }
+
+                editandoProducto = producto;
+                document.getElementById('form-title').textContent = 'Editar Planta';
+
+                // Llenar el formulario con los datos del producto
+                document.getElementById('nombre').value = producto.nombre;
+                document.getElementById('nombreCientifico').value = producto.nombreCientifico;
+                document.getElementById('precio').value = producto.precio;
+                document.getElementById('categoria').value = producto.categoria;
+                document.getElementById('descripcion').value = producto.descripcion;
+
+                const imagenUrl = obtenerUrlImagen(producto.imagenKey, false);
+                document.getElementById('imagenUrl').value = imagenUrl;
+
+                document.getElementById('riego').value = producto.cuidados.riego;
+                document.getElementById('luz').value = producto.cuidados.luz;
+                document.getElementById('suelo').value = producto.cuidados.suelo;
+
+                document.getElementById('producto-form').style.display = 'block';
+                document.getElementById('producto-form').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('Error en editarProducto:', error);
+                mostrarMensaje('❌ Error al cargar los datos del producto', 'error');
+            }
+        }
+
+        // Función para eliminar producto
+        async function eliminarProducto(id) {
+            try {
+                const producto = window.productosDB.obtenerPorId(id);
+                if (!producto) {
+                    mostrarMensaje('❌ Producto no encontrado', 'error');
+                    return;
+                }
+
+                if (confirm(`¿Estás seguro de que quieres eliminar "${producto.nombre}"?\n\nEsta acción no se puede deshacer.`)) {
+                    // Mostrar mensaje de eliminando
+                    mostrarMensaje('🗑️ Eliminando de la nube...', 'success');
+                    
+                    const resultado = await window.productosDB.eliminar(id);
+                    if (resultado) {
+                        mostrarMensaje('✅ Producto eliminado y actualizado en la nube');
+                        recargarListaProductos();
+
+                        // Notificar al sitio principal
+                        const notificado = notificarSitioPrincipal('eliminar');
+                        if (notificado) {
+                            mostrarMensaje(`📡 Sitio web actualizado automáticamente`, 'success');
+                        } else {
+                            mostrarMensaje(`⚠️ Recarga manualmente el sitio web para ver los cambios`, 'error');
+                        }
+                    } else {
+                        mostrarMensaje('❌ Error al eliminar el producto', 'error');
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error en eliminarProducto:', error);
+                mostrarMensaje('❌ Error al eliminar el producto', 'error');
+            }
+        }
+
+        // Función para previsualizar el sitio
+        function previsualizarSitio() {
+            window.open('index.html', '_blank');
+        }
+
+        // ========== FUNCIONES PARA GESTIÓN DEL HERO ==========
+
+        // Función para mostrar el formulario de agregar hero
+        function mostrarFormularioHero() {
+            editandoHero = null;
+            document.getElementById('hero-form-title').textContent = 'Agregar Imagen Hero';
+            document.getElementById('form-hero').reset();
+            document.getElementById('hero-form').style.display = 'block';
+            document.getElementById('hero-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Función para cancelar el formulario hero
+        function cancelarFormularioHero() {
+            document.getElementById('hero-form').style.display = 'none';
+            document.getElementById('form-hero').reset();
+            editandoHero = null;
+        }
+
+        // Función para manejar el envío del formulario hero
+        function manejarFormularioHero(e) {
+            e.preventDefault();
+
+            try {
+                const formData = {
+                    nombre: document.getElementById('hero-nombre').value.trim(),
+                    posicion: document.getElementById('hero-posicion').value,
+                    imagenUrl: document.getElementById('hero-imagenUrl').value.trim(),
+                    descripcion: document.getElementById('hero-descripcion').value.trim()
+                };
+
+                // Validar campos obligatorios
+                if (!formData.nombre || !formData.posicion || !formData.imagenUrl) {
+                    mostrarMensaje('Por favor, completa todos los campos obligatorios del Hero', 'error');
+                    return;
+                }
+
+                // Procesar imagen hero según el modo
+                if (window.imageConfig) {
+                    if (modoLocal) {
+                        // Modo local: generar nombre de archivo hero
+                        const nombreArchivo = generarNombreArchivoLocal(formData.nombre, true);
+                        window.imageConfig.heroLocales[formData.posicion] = `images/${nombreArchivo}`;
+                        window.imageConfig.hero[formData.posicion] = formData.imagenUrl; // Mantener URL como respaldo
+
+                        mostrarMensaje(`📁 Imagen Hero configurada como local: ${nombreArchivo}`, 'success');
+                    } else {
+                        // Modo externo: usar URL directamente
+                        window.imageConfig.hero[formData.posicion] = formData.imagenUrl;
+                        window.imageConfig.heroLocales[formData.posicion] = `images/hero${formData.posicion.replace('slide', '')}.jpg`;
+                    }
+                }
+
+                if (editandoHero) {
+                    mostrarMensaje('✅ Imagen Hero actualizada correctamente');
+                } else {
+                    mostrarMensaje('✅ Nueva imagen Hero agregada al carrusel');
+                }
+
+                cancelarFormularioHero();
+                recargarListaHero();
+
+                // Notificar al sitio principal para que recargue el carrusel
+                try {
+                    if (window.opener && window.opener.inicializarHeroCarrusel) {
+                        window.opener.inicializarHeroCarrusel();
+                    }
+                } catch (e) {
+                    console.log('No se pudo notificar al sitio principal');
+                }
+
+            } catch (error) {
+                console.error('Error en manejarFormularioHero:', error);
+                mostrarMensaje('❌ Error inesperado al procesar la imagen Hero', 'error');
+            }
+        }
+
+        // Función para recargar la lista de imágenes hero
+        function recargarListaHero() {
+            try {
+                const lista = document.getElementById('hero-lista');
+
+                if (!window.imageConfig) {
+                    lista.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #e53e3e;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+                            <p>Error: No se pudo cargar la configuración de imágenes</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const heroImages = window.imageConfig.getHeroImages();
+
+                if (heroImages.length === 0) {
+                    lista.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #718096;">
+                            <i class="fas fa-images" style="font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+                            <p>No hay imágenes en el carrusel. ¡Agrega tu primera imagen Hero!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                lista.innerHTML = heroImages.map((heroImg, index) => {
+                    const slideNumber = index + 1;
+                    const slideName = `Slide ${slideNumber}`;
+
+                    return `
+                        <div class="producto-item">
+                            <img src="${heroImg.url}" alt="${slideName}" class="producto-imagen" 
+                                 onerror="this.src='images/placeholder.svg'" style="object-fit: cover;">
+                            <div class="producto-info">
+                                <h4>${slideName}</h4>
+                                <p><strong>Posición:</strong> ${heroImg.key}</p>
+                                <p><strong>URL:</strong> ${heroImg.url.substring(0, 50)}${heroImg.url.length > 50 ? '...' : ''}</p>
+                                <p style="color: #38a169;"><i class="fas fa-check-circle"></i> Activa en carrusel</p>
+                            </div>
+                            <div class="producto-actions">
+                                <button class="btn btn-edit" onclick="editarHero('${heroImg.key}', '${slideName}', '${heroImg.url}')">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn btn-delete" onclick="eliminarHero('${heroImg.key}', '${slideName}')">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error en recargarListaHero:', error);
+                mostrarMensaje('❌ Error al cargar la lista de imágenes Hero', 'error');
+            }
+        }
+
+        // Función para editar imagen hero
+        function editarHero(key, nombre, url) {
+            try {
+                editandoHero = { key, nombre, url };
+                document.getElementById('hero-form-title').textContent = 'Editar Imagen Hero';
+
+                // Llenar el formulario con los datos existentes
+                document.getElementById('hero-nombre').value = nombre;
+                document.getElementById('hero-posicion').value = key;
+                document.getElementById('hero-imagenUrl').value = url;
+                document.getElementById('hero-descripcion').value = '';
+
+                document.getElementById('hero-form').style.display = 'block';
+                document.getElementById('hero-form').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('Error en editarHero:', error);
+                mostrarMensaje('❌ Error al cargar los datos de la imagen Hero', 'error');
+            }
+        }
+
+        // Función para eliminar imagen hero
+        function eliminarHero(key, nombre) {
+            try {
+                if (confirm(`¿Estás seguro de que quieres eliminar "${nombre}" del carrusel?\n\nEsto afectará la visualización del sitio web.`)) {
+
+                    // Restaurar imagen por defecto
+                    const defaultImages = {
+                        slide1: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1200&h=800&fit=crop",
+                        slide2: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=1200&h=800&fit=crop",
+                        slide3: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=800&fit=crop",
+                        slide4: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop"
+                    };
+
+                    if (window.imageConfig && defaultImages[key]) {
+                        window.imageConfig.hero[key] = defaultImages[key];
+                        mostrarMensaje('✅ Imagen Hero restaurada a la imagen por defecto');
+                    } else {
+                        mostrarMensaje('⚠️ No se pudo restaurar la imagen por defecto', 'error');
+                    }
+
+                    recargarListaHero();
+
+                    // Notificar al sitio principal
+                    try {
+                        if (window.opener && window.opener.inicializarHeroCarrusel) {
+                            window.opener.inicializarHeroCarrusel();
+                        }
+                    } catch (e) {
+                        console.log('No se pudo notificar al sitio principal');
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error en eliminarHero:', error);
+                mostrarMensaje('❌ Error al eliminar la imagen Hero', 'error');
+            }
+        }
+
+        // Función para previsualizar el carrusel
+        function previsualizarCarrusel() {
+            const newWindow = window.open('index.html', '_blank');
+            // Hacer scroll al hero después de que cargue
+            setTimeout(() => {
+                try {
+                    newWindow.document.getElementById('inicio').scrollIntoView({ behavior: 'smooth' });
+                } catch (e) {
+                    console.log('No se pudo hacer scroll al carrusel');
+                }
+            }, 1000);
+        }
+
+        // Inicializar cuando cargue la página
+        document.addEventListener('DOMContentLoaded', function () {
+            try {
+                // ========== CONFIGURAR LOGIN ==========
+
+                // Configurar formulario de login
+                const loginForm = document.getElementById('login-form');
+                if (loginForm) {
+                    loginForm.addEventListener('submit', manejarLogin);
+                }
+
+                // Configurar teclas en campos de login
+                const usernameInput = document.getElementById('username');
+                const passwordInput = document.getElementById('password');
+
+                if (usernameInput) {
+                    usernameInput.addEventListener('keydown', manejarTeclaLogin);
+                }
+                if (passwordInput) {
+                    passwordInput.addEventListener('keydown', manejarTeclaLogin);
+                }
+
+                // Verificar si hay sesión activa
+                if (verificarSesion()) {
+                    // Ya hay sesión, continuar con la inicialización del admin
+                    inicializarAdmin();
+                }
+                // Si no hay sesión, se muestra el login automáticamente
+
+            } catch (error) {
+                console.error('Error al inicializar:', error);
+                mostrarLogin();
+            }
+        });
+
+        // Función para inicializar el admin (separada del login)
+        function inicializarAdmin() {
+            try {
+                // Verificar que las dependencias estén cargadas
+                if (typeof window.productosDB === 'undefined') {
+                    mostrarMensaje('❌ Error: No se pudo cargar la base de datos de productos', 'error');
+                    return;
+                }
+
+                if (typeof window.imageConfig === 'undefined') {
+                    mostrarMensaje('⚠️ Advertencia: No se pudo cargar la configuración de imágenes', 'error');
+                } else {
+                    // Cargar configuración desde localStorage primero
+                    const savedMode = localStorage.getItem('imageMode');
+                    if (savedMode) {
+                        modoLocal = (savedMode === 'local');
+                        window.imageConfig.useLocalImages = modoLocal;
+                    } else {
+                        // Sincronizar modo con la configuración por defecto
+                        modoLocal = window.imageConfig.useLocalImages || false;
+                    }
+                }
+
+                // Configurar el toggle
+                const toggleBtn = document.getElementById('toggleMode');
+                if (toggleBtn) {
+                    toggleBtn.addEventListener('click', alternarModo);
+                }
+
+                actualizarEstadoToggle();
+                recargarListaProductos();
+                recargarListaHero();
+
+                // Solo mostrar mensaje si no es la primera carga
+                if (sesionActiva) {
+                    mostrarMensaje('✅ Panel de administración cargado correctamente');
+                }
+
+            } catch (error) {
+                console.error('Error al inicializar admin:', error);
+                mostrarMensaje('❌ Error al inicializar el panel de administración', 'error');
+            }
+        }
+    </script>
+</body>
+
+</html>
